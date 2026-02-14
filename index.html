@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>My Heart</title>
+
+<style>
+body{
+ margin:0;
+ height:100vh;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ background:radial-gradient(circle,#2b0000,#000);
+ font-family:sans-serif;
+ overflow:hidden;
+}
+
+/* TITLE */
+.title{
+ position:absolute;
+ top:40px;
+ color:white;
+ font-size:40px;
+ text-shadow:0 0 15px red;
+}
+
+/* HEART */
+.heart-container{
+ cursor:pointer;
+ animation:beat 1s infinite;
+}
+@keyframes beat{
+ 0%,100%{transform:scale(1);}
+ 50%{transform:scale(1.2);}
+}
+
+.heart{
+ width:160px;
+ height:160px;
+ background:red;
+ transform:rotate(-45deg);
+ position:relative;
+ box-shadow:0 0 25px red;
+}
+.heart:before,.heart:after{
+ content:'';
+ width:160px;height:160px;
+ background:red;
+ border-radius:50%;
+ position:absolute;
+}
+.heart:before{top:-80px;}
+.heart:after{left:80px;}
+
+/* PASSWORD BOX */
+.password-box{
+ display:none;
+ position:absolute;
+ background:white;
+ padding:25px;
+ border-radius:12px;
+ text-align:center;
+ box-shadow:0 0 25px black;
+}
+
+input{
+ padding:8px;
+ font-size:16px;
+ margin-top:10px;
+}
+
+@keyframes open{
+ from{transform:scale(0);}
+ to{transform:scale(1);}
+}
+
+.side{width:50%;height:100%;float:left;display:flex;align-items:center;justify-content:center;padding:10px;}
+.left img{width:100%;height:100%;object-fit:cover;border-radius:10px;}
+.right{background:#ffe6e6;text-align:center;font-weight:bold;color:#800000;}
+
+/* POPUP */
+.popup{
+ position:fixed;
+ top:0;left:0;
+ width:100%;height:100%;
+ background:rgba(0,0,0,0.9);
+ display:none;
+ align-items:center;
+ justify-content:center;
+}
+.box{
+ background:white;
+ padding:20px;
+ border-radius:12px;
+ text-align:center;
+}
+button{
+ margin:10px;
+ padding:10px 20px;
+ font-size:18px;
+ border:none;
+ border-radius:8px;
+ cursor:pointer;
+}
+#yesBtn{background:#ff4d6d;color:white;}
+#noBtn{background:#ccc;}
+
+.gifShow{
+ display:none;
+ position:fixed;
+ width:100%;
+ height:100%;
+ background:black;
+ align-items:center;
+ justify-content:center;
+ flex-direction:column;
+}
+
+.gifShow img{
+ width:260px;
+ margin:10px;
+ border-radius:10px;
+}
+
+.gif-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 GIFs per row */
+  gap: 10px;
+  margin-top: 20px;
+  width: 90%;
+  justify-items: center;
+}
+
+.gif-grid img {
+  width: 180px;
+  border-radius: 10px;
+  opacity: 0; /* start hidden */
+  transform: scale(0.8);
+  animation: fadeInUp 0.8s forwards;
+}
+
+/* Fade-in + slight upward movement */
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+.intro-screen{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:black;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    z-index:20;
+}
+
+/* 3D Floating Animation */
+.heart-anim img{
+    width:200px;
+    animation:
+        float 3s ease-in-out infinite,
+        rotate3d 6s linear infinite,
+        glow 1.5s ease-in-out infinite alternate;
+}
+
+/* Floating up-down */
+@keyframes float{
+    0%,100%{ transform: translateY(0px); }
+    50%{ transform: translateY(-20px); }
+}
+
+/* 3D rotation */
+@keyframes rotate3d{
+    0%{ transform: rotateY(0deg); }
+    50%{ transform: rotateY(180deg); }
+    100%{ transform: rotateY(360deg); }
+}
+
+/* Glow pulse */
+@keyframes glow{
+    from{ filter: drop-shadow(0 0 10px red); }
+    to{ filter: drop-shadow(0 0 25px red); }
+}
+
+.intro-text{
+    color:white;
+    margin-top:20px;
+    font-size:26px;
+    text-align:center;
+    animation:fadeIn 2s;
+}
+
+@keyframes fadeIn{
+    from{opacity:0;}
+    to{opacity:1;}
+}
+
+/* INTRO SCREEN */
+.intro-screen{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:radial-gradient(circle at center,#220000,#000);
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    z-index:50;
+    perspective:1000px;
+}
+
+/* 3D Scene */
+.scene{
+    width:250px;
+    height:250px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+/* 3D Heart Container */
+.heart3d{
+    width:200px;
+    height:200px;
+    position:relative;
+    transform-style:preserve-3d;
+    animation:
+        rotate 8s infinite linear,
+        float 4s ease-in-out infinite,
+        beat 1.2s ease-in-out infinite;
+}
+
+/* Replaceable Image */
+.heart3d img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    filter: drop-shadow(0 20px 30px rgba(0,0,0,0.6));
+    animation: shine 3s infinite linear;
+}
+
+/* 3D Rotation */
+@keyframes rotate{
+    0%{ transform: rotateY(0deg) rotateX(10deg); }
+    50%{ transform: rotateY(180deg) rotateX(-10deg); }
+    100%{ transform: rotateY(360deg) rotateX(10deg); }
+}
+
+/* Floating */
+@keyframes float{
+    0%,100%{ translate:0 0; }
+    50%{ translate:0 -25px; }
+}
+
+/* Heartbeat */
+@keyframes beat{
+    0%,100%{ scale:1; }
+    50%{ scale:1.08; }
+}
+
+/* Moving Shine Effect */
+@keyframes shine{
+    0%{ filter: brightness(1) drop-shadow(0 0 10px red); }
+    50%{ filter: brightness(1.4) drop-shadow(0 0 25px red); }
+    100%{ filter: brightness(1) drop-shadow(0 0 10px red); }
+}
+
+/* Text */
+.intro-text{
+    margin-top:30px;
+    color:white;
+    font-size:28px;
+    text-align:center;
+    letter-spacing:1px;
+    animation:fadeIn 2s ease-in;
+}
+
+@keyframes fadeIn{
+    from{opacity:0;}
+    to{opacity:1;}
+}
+
+.locket-wrapper{
+    display:none;
+    perspective:1000px;
+}
+
+.locket{
+    width:260px;
+    height:220px;
+    position:relative;
+    transform-style:preserve-3d;
+    cursor:pointer;
+}
+
+/* BOTH HALVES */
+.half{
+    position:absolute;
+    width:130px;
+    height:220px;
+    background:linear-gradient(145deg,#ff4d6d,#b3003c);
+    border-radius:130px 130px 0 0;
+    overflow:hidden;
+    box-shadow:0 10px 25px rgba(0,0,0,0.4);
+}
+
+/* LEFT HEART HALF */
+.left{
+    left:0;
+    transform-origin:right;
+    transition:transform 1s;
+}
+
+/* RIGHT HEART HALF */
+.right{
+    right:0;
+}
+
+/* OPEN ANIMATION */
+.open .left{
+    transform:rotateY(-150deg);
+}
+
+/* IMAGES INSIDE */
+.half img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+/* TEXT SIDE */
+.message{
+    color:white;
+    font-size:18px;
+    padding:15px;
+    text-align:center;
+}
+
+.book-container{
+ display:none;
+ perspective:2000px;
+ margin-top:40px;
+}
+
+.book-cover{
+ width:300px;
+ height:400px;
+ background:linear-gradient(145deg,#8B0000,#b30000);
+ color:white;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ justify-content:center;
+ border-radius:10px;
+ box-shadow:0 20px 40px rgba(0,0,0,0.4);
+ cursor:pointer;
+ animation:coverPulse 2s infinite;
+ margin-top: 10px;
+ margin-left: 200;
+}
+
+@keyframes coverPulse{
+ 0%,100%{transform:scale(1);}
+ 50%{transform:scale(1.05);}
+}
+
+.book {
+  position: relative;
+  width: 640px;
+  height: 420px;
+  transform-style: preserve-3d;
+  margin-top: 20px;
+
+  display: none;   /* HIDE the book by default */
+  opacity: 0;
+}
+
+
+.page {
+  width: 640px; /* or your book page width */
+  height: 420px; /* or your book page height */
+  transform-origin: left center;
+  transition: 1.4s ease-in-out;
+  display: flex;
+  overflow: hidden;
+  position: absolute; /* ensure pages stack correctly */
+  border-radius: 10px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+}
+
+
+.left, .right{
+ width:50%;
+ padding:15px;
+}
+
+.left img{
+ width:100%;
+ height:100%;
+ object-fit:cover;
+ border-radius:8px;
+}
+.page.flipped {
+  transform: rotateY(-180deg);
+}
+
+
+
+</style>
+</head>
+<body>
+
+<div class="title">My Heart ❤️</div>
+<!-- ULTRA 3D HEART INTRO -->
+<div class="intro-screen" id="introScreen">
+  <div class="scene">
+      <div class="heart3d">
+          <!-- REPLACE IMAGE HERE -->
+          <img src="rishi1.png" id="heartImage">
+      </div>
+  </div>
+
+  <!-- EDIT TEXT HERE -->
+  <h2 class="intro-text">
+      This heart beats only for you ❤️
+  </h2>
+</div>
+
+<div class="heart-container" onclick="askPassword()" id="heart">
+<div class="heart"></div>
+</div>
+
+<!-- PASSWORD -->
+<div class="password-box" id="passBox">
+<h3>Only the owner of this heart can come inside ❤️</h3>
+<input type="password" id="pass" placeholder="Enter Password">
+<br><br>
+<button onclick="checkPass()">Enter</button>
+<p id="hint" style="color:red;"></p>
+</div>
+
+<div class="book-container" id="book">
+  
+  <div class="book-cover" onclick="openBook()">
+      <p>Click to open</p>
+  </div>
+
+  <div class="book" id="bookInner">
+
+    <!-- PAGE 1 -->
+    <div class="page">
+      <div class="left">
+        <img src="first.jpeg">
+      </div>
+      <div class="right">
+        <h2>The Day I Met You</h2>
+        <p>You changed my world forever...</p>
+      </div>
+    </div>
+
+    <!-- PAGE 2 -->
+    <div class="page">
+      <div class="left">
+        <img src="rishi1.png">
+      </div>
+      <div class="right">
+        <h2>My Favorite Moments</h2>
+        <p>Every second with you is special ❤️</p>
+      </div>
+    </div>
+
+    <!-- PAGE 3 -->
+    <div class="page">
+      <div class="left">
+        <img src="rishi.jpeg">
+      </div>
+      <div class="right">
+        <h2>My Promise</h2>
+        <p>I want to stay with you forever...</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+<!-- VALENTINE -->
+<div class="popup" id="popup">
+<div class="box">
+<h2>Will you be mine only forever ? ❤️</h2>
+<button id="yesBtn" onclick="yes()">Yes 💖</button>
+<button id="noBtn" onclick="no()">No 💔</button>
+</div>
+</div>
+
+<!-- GIF SLIDESHOW -->
+<div class="gifShow" id="gifs">
+  <h1 style="color:white; text-align:center;">Happy Valentine's Day ❤️</h1>
+  <div class="gif-grid" id="gifGrid"></div>
+</div>
+</div>
+
+<script>
+function askPassword(){
+
+document.getElementById("heart").style.display="none";
+document.getElementById("introScreen").style.display="flex";
+
+// Cinematic pause before password
+setTimeout(()=>{
+  document.getElementById("introScreen").style.opacity="0";
+  setTimeout(()=>{
+    document.getElementById("introScreen").style.display="none";
+    document.getElementById("passBox").style.display="block";
+  },1000);
+},5000);
+}
+
+function openLocket(){
+    document.querySelector(".locket").classList.toggle("open");
+
+    // After opening → show valentine popup
+    setTimeout(()=>{
+        // document.getElementById("popup").style.display="flex";
+    },1200);
+}
+
+let currentPage=0;
+let pages;
+
+function openBook(){
+  document.querySelector(".book-cover").style.display="none";
+
+  let book = document.getElementById("bookInner");
+  book.style.display = "block";   // SHOW the book now
+  setTimeout(() => {
+    book.style.opacity = "1";      // fade in
+  }, 50);
+
+  pages = document.querySelectorAll(".page");
+  flipNext();
+}
+
+
+function flipNext() {
+  if (currentPage < pages.length) {
+    pages[currentPage].classList.add("flipped");
+    currentPage++;
+    setTimeout(flipNext, 1600);
+  } else {
+    setTimeout(() => {
+      document.getElementById("popup").style.display = "flex";
+    }, 1000);
+  }
+}
+
+
+
+/* CHANGE PASSWORD HERE */
+let realPass="Rishika";
+
+function checkPass(){
+ let p=document.getElementById("pass").value;
+
+ if(p===realPass){
+
+   document.getElementById("passBox").style.display="none";
+
+   // Show book
+   document.getElementById("book").style.display="block";
+
+   // Auto open locket after showing
+   setTimeout(()=>{
+      openLocket();
+   },500);
+
+ }else{
+   document.getElementById("hint").innerText="Hint: just look at the mirror 😉";
+ }
+}
+
+
+let c=0;
+function no(){
+ c++;
+ let yes=document.getElementById("yesBtn");
+ let no=document.getElementById("noBtn");
+
+ let msgs=[
+ "Are you sure? 😢",
+ "Really sure? 😟",
+ "Think again 💭",
+ "Last chance 😭",
+ "Please? 🥺",
+ "Aree! bas ab ha bolo 😤"
+ ];
+
+ if(c<msgs.length) no.innerText=msgs[c];
+
+ yes.style.fontSize=(18+c*8)+"px";
+ yes.style.padding=(10+c*5)+"px "+(20+c*10)+"px";
+
+ if(c>5) no.style.display="none";
+}
+
+function yes() {
+  document.getElementById("popup").style.display = "none";
+  const gifsDiv = document.getElementById("gifs");
+  const gifGrid = document.getElementById("gifGrid");
+  gifsDiv.style.display = "flex";
+
+  // List of your 12 GIFs
+  const gifList = [
+    "gif1.webp",
+    "gif2.webp",
+    "gif3.webp",
+    "gif4.webp",
+    "gif5.webp",
+    "gif6.webp",
+    "gif7.webp",
+    "gif8.webp",
+  ];
+
+  // Clear grid first
+  gifGrid.innerHTML = "";
+
+  // Add GIFs one by one with delay
+  gifList.forEach((src, index) => {
+    const img = document.createElement("img");
+    img.src = src;
+    img.style.animationDelay = `${index * 0.3}s`; // stagger effect
+    gifGrid.appendChild(img);
+  });
+}
+
+</script>
+
+</body>
+</html>
